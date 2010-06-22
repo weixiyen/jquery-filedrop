@@ -83,41 +83,41 @@
 		return builder;
 	}
 
-    function progress(e) {
-        if (e.lengthComputable) {
-            var percentage = Math.round((e.loaded * 100) / e.total);
-            if (this.currentProgress != percentage) {
-
-                this.currentProgress = percentage;
-                opts.progressUpdated(this.index, this.file, this.currentProgress);
-
-                var elapsed = new Date().getTime();
-                var diffTime = elapsed - this.currentStart;
-                if (diffTime >= opts.refresh) {
-                    var diffData = e.loaded - this.startData;
-                    var speed = diffData / diffTime; // KB per second
-                    opts.speedUpdated(this.index, this.file, speed);
-                    this.startData = e.loaded;
-                    this.currentStart = elapsed;
-                }
-            }
-        }
-    }
+	function progress(e) {
+		if (e.lengthComputable) {
+			var percentage = Math.round((e.loaded * 100) / e.total);
+			if (this.currentProgress != percentage) {
+				
+				this.currentProgress = percentage;
+				opts.progressUpdated(this.index, this.file, this.currentProgress);
+				
+				var elapsed = new Date().getTime();
+				var diffTime = elapsed - this.currentStart;
+				if (diffTime >= opts.refresh) {
+					var diffData = e.loaded - this.startData;
+					var speed = diffData / diffTime; // KB per second
+					opts.speedUpdated(this.index, this.file, speed);
+					this.startData = e.loaded;
+					this.currentStart = elapsed;
+				}
+			}
+		}
+	}
     
     
     
-    function upload(files) {
-    	stop_loop = false;
-    	if (!files) {
-    		opts.error(errors[0]);
-    		return false;
-    	}
-    	var len = files.length;
-	    
-	    if (len > opts.maxfiles) {
-	    	opts.error(errors[1]);
-	    	return false;
-	    }
+	function upload(files) {
+		stop_loop = false;
+		if (!files) {
+			opts.error(errors[0]);
+			return false;
+		}
+		var len = files.length;
+		
+		if (len > opts.maxfiles) {
+		    opts.error(errors[1]);
+		    return false;
+		}
 
 		for (var i=0; i<len; i++) {
 			if (stop_loop) return false;
