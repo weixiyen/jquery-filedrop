@@ -1,4 +1,4 @@
-jQuery filedrop plugin - html5
+jQuery filedrop plugin - html5 drag desktop files into browser
 ==============================
 jQuery filedrop uses the HTML5 File API to allow users 
 to drag multiple files from desktop to the browser, uploading 
