@@ -82,7 +82,11 @@
 			builder += val;
 			builder += crlf;
 		});
-        
+		
+		builder += dashdash;
+		builder += boundary;
+		builder += crlf;
+		
 		builder += dashdash;
 		builder += boundary;
 		builder += crlf;
@@ -95,10 +99,6 @@
 		builder += crlf; 
 		
 		builder += filedata;
-		builder += crlf;
-		
-		builder += dashdash;
-		builder += boundary;
 		builder += crlf;
         
 		builder += dashdash;
