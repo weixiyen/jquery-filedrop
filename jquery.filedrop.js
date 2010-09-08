@@ -40,6 +40,7 @@
 			docEnter: empty,
 			docOver: empty,
 			docLeave: empty,
+			rename: empty,
 			error: function(err, file){alert(err);},
 			uploadStarted: empty,
 			uploadFinished: empty,
@@ -158,7 +159,11 @@
 					opts.error(errors[2], reader.file);
 					return false;
 				}
-		    	
+				
+				if (beforeEach(reader.file) == false) {
+					return false;
+				}
+				
 				reader.addEventListener("loadend", send, false);
 				reader.readAsBinaryString(files[i]);
 			} catch(err) {
@@ -168,13 +173,21 @@
 		}
 	    
 		function send(e) {
+			
 			var xhr = new XMLHttpRequest(),
 				upload = xhr.upload,
 				file = e.target.file,
 				index = e.target.index,
 				start_time = new Date().getTime(),
 				boundary = '------multipartformboundary' + (new Date).getTime(),
+				builder;
+				
+			newName = rename(file.name);
+			if (typeof newName === "string") {
+				builder = getBuilder(newName, e.target.result, boundary);
+			} else {
 				builder = getBuilder(file.name, e.target.result, boundary);
+			}
 			
 			upload.index = index;
 			upload.file = file;
@@ -203,6 +216,10 @@
 		}
 	}
     
+	function rename(name) {
+		return opts.rename(name);
+	}
+	
 	function dragEnter(e) {
 		clearTimeout(doc_leave_timer);
 		e.preventDefault();

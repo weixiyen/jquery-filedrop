@@ -75,5 +75,13 @@ Usage Example
 		},
 		speedUpdated: function(i, file, speed) {
 			// speed in kb/s
+		},
+		rename: function(name) {
+			// name in string format
+			// must return alternate name as string
+		},
+		beforeEach: function(file) {
+			// file is a file object
+			// return false to cancel upload
 		}
 	});
