@@ -40,6 +40,7 @@
 			docEnter: empty,
 			docOver: empty,
 			docLeave: empty,
+			beforeEach: empty,
 			rename: empty,
 			error: function(err, file){alert(err);},
 			uploadStarted: empty,
@@ -218,6 +219,10 @@
     
 	function rename(name) {
 		return opts.rename(name);
+	}
+	
+	function beforeEach(file) {
+		return opts.beforeEach(file);
 	}
 	
 	function dragEnter(e) {
