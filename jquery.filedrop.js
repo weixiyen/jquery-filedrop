@@ -41,6 +41,7 @@
 			docOver: empty,
 			docLeave: empty,
 			beforeEach: empty,
+			afterAll: empty,
 			rename: empty,
 			error: function(err, file){alert(err);},
 			uploadStarted: empty,
@@ -65,6 +66,7 @@
 	function drop(e) {
 		opts.drop(e);
 		upload(e.dataTransfer.files);
+		afterAll();
 		e.preventDefault();
 		return false;
 	}
@@ -221,6 +223,10 @@
 	
 	function beforeEach(file) {
 		return opts.beforeEach(file);
+	}
+	
+	function afterAll() {
+		return opts.afterAll();
 	}
 	
 	function dragEnter(e) {
