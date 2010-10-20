@@ -151,21 +151,22 @@
 		for (var i=0; i<len; i++) {
 			if (stop_loop) return false;
 			try {
-				if (i === len) return;
-				var reader = new FileReader(),
-					max_file_size = 1048576 * opts.maxfilesize;
+				if (beforeEach(files[i]) != false) {
+					if (i === len) return;
+					var reader = new FileReader(),
+						max_file_size = 1048576 * opts.maxfilesize;
+						
+					reader.index = i;
+					reader.file = files[i];
+					reader.len = len;
+					if (reader.file.size > max_file_size) {
+						opts.error(errors[2], reader.file);
+						return false;
+					}
 					
-				reader.index = i;
-				reader.file = files[i];
-				if (beforeEach(reader.file) == false) return false;
-				reader.len = len;
-				if (reader.file.size > max_file_size) {
-					opts.error(errors[2], reader.file);
-					return false;
+					reader.addEventListener("loadend", send, false);
+					reader.readAsBinaryString(files[i]);
 				}
-				
-				reader.addEventListener("loadend", send, false);
-				reader.readAsBinaryString(files[i]);
 			} catch(err) {
 				opts.error(errors[0]);
 				return false;
