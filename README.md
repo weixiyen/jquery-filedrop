@@ -83,5 +83,8 @@ Usage Example
 		beforeEach: function(file) {
 			// file is a file object
 			// return false to cancel upload
+		},
+		afterAll: function() {
+			// runs after all files have been uploaded or otherwise dealt with
 		}
 	});
