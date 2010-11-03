@@ -88,3 +88,8 @@ Usage Example
 			// runs after all files have been uploaded or otherwise dealt with
 		}
 	});
+	
+Contributions
+---------------
+[Reactor5](http://github.com/Reactor5/) (Brian Hicks) 
+[jpb0104](http://github.com/jpb0104)
