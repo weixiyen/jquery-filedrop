@@ -141,7 +141,8 @@
 			return false;
 		}
 		var len = files.length,
-			filesDone = 0;
+			filesDone = 0,
+			filesRejected = 0;
 		
 		if (len > opts.maxfiles) {
 		    opts.error(errors[1]);
@@ -166,6 +167,8 @@
 					
 					reader.addEventListener("loadend", send, false);
 					reader.readAsBinaryString(files[i]);
+				} else {
+					filesRejected++;
 				}
 			} catch(err) {
 				opts.error(errors[0]);
@@ -212,7 +215,10 @@
 				    timeDiff = now - start_time,
 				    result = opts.uploadFinished(index, file, eval( '[' + xhr.responseText + ']' ), timeDiff);
 					filesDone++;
-					if (filesDone == e.target.len) {
+					console.log(filesDone);
+					console.log(filesRejected);
+					console.log(e.target.len);
+					if (filesDone == e.target.len - filesRejected) {
 						afterAll();
 					}
 			    if (result === false) stop_loop = true;
