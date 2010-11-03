@@ -215,9 +215,6 @@
 				    timeDiff = now - start_time,
 				    result = opts.uploadFinished(index, file, eval( '[' + xhr.responseText + ']' ), timeDiff);
 					filesDone++;
-					console.log(filesDone);
-					console.log(filesRejected);
-					console.log(e.target.len);
 					if (filesDone == e.target.len - filesRejected) {
 						afterAll();
 					}
