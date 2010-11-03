@@ -66,7 +66,6 @@
 	function drop(e) {
 		opts.drop(e);
 		upload(e.dataTransfer.files);
-		afterAll();
 		e.preventDefault();
 		return false;
 	}
@@ -141,7 +140,8 @@
 			opts.error(errors[0]);
 			return false;
 		}
-		var len = files.length;
+		var len = files.length,
+			filesDone = 0;
 		
 		if (len > opts.maxfiles) {
 		    opts.error(errors[1]);
@@ -211,6 +211,10 @@
 				var now = new Date().getTime(),
 				    timeDiff = now - start_time,
 				    result = opts.uploadFinished(index, file, eval( '[' + xhr.responseText + ']' ), timeDiff);
+					filesDone++;
+					if (filesDone == e.target.len) {
+						afterAll();
+					}
 			    if (result === false) stop_loop = true;
 			    }
 			};
