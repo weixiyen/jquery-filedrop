@@ -215,7 +215,7 @@
 				    timeDiff = now - start_time,
 				    result = opts.uploadFinished(index, file, eval( '[' + xhr.responseText + ']' ), timeDiff);
 					filesDone++;
-					if (filesDone == e.target.len - filesRejected) {
+					if (filesDone == len - filesRejected) {
 						afterAll();
 					}
 			    if (result === false) stop_loop = true;
