@@ -178,6 +178,11 @@
 		}
 	    
 		function send(e) {
+			// Sometimes the index is not attached to the
+			// event object. Find it by size. Hack for sure.
+			if (e.target.index == undefined) {
+				e.target.index = getIndexBySize(e.total);
+			}
 			
 			var xhr = new XMLHttpRequest(),
 				upload = xhr.upload,
@@ -223,6 +228,16 @@
 			    }
 			};
 		}
+	}
+    
+	function getIndexBySize(size) {
+		for (var i=0; i < filesCount; i++) {
+			if (files[i].size == size) {
+				return i;
+			}
+		}
+		
+		return undefined;
 	}
     
 	function rename(name) {
