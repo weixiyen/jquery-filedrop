@@ -51,7 +51,9 @@
 		},
 		errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge"],
 		doc_leave_timer,
-		stop_loop = false;
+		stop_loop = false,
+		files_count = 0,
+		files;
 
 	$.fn.filedrop = function(options) {
 		opts = $.extend( {}, default_opts, options );
@@ -65,7 +67,9 @@
      
 	function drop(e) {
 		opts.drop(e);
-		upload(e.dataTransfer.files);
+		files = e.dataTransfer.files;
+		files_count = files.length;
+		upload();
 		e.preventDefault();
 		return false;
 	}
@@ -134,33 +138,30 @@
     
     
     
-	function upload(files) {
+	function upload() {
 		stop_loop = false;
 		if (!files) {
 			opts.error(errors[0]);
 			return false;
 		}
-		var len = files.length,
-			filesDone = 0,
+		var filesDone = 0,
 			filesRejected = 0;
 		
-		if (len > opts.maxfiles) {
+		if (files_count > opts.maxfiles) {
 		    opts.error(errors[1]);
 		    return false;
 		}
 
-		for (var i=0; i<len; i++) {
+		for (var i=0; i<files_count; i++) {
 			if (stop_loop) return false;
 			try {
 				if (beforeEach(files[i]) != false) {
-					if (i === len) return;
+					if (i === files_count) return;
 					var reader = new FileReader(),
 						max_file_size = 1048576 * opts.maxfilesize;
 						
 					reader.index = i;
-					reader.file = files[i];
-					reader.len = len;
-					if (reader.file.size > max_file_size) {
+					if (files[i].size > max_file_size) {
 						opts.error(errors[2], reader.file);
 						return false;
 					}
@@ -180,7 +181,7 @@
 			
 			var xhr = new XMLHttpRequest(),
 				upload = xhr.upload,
-				file = e.target.file,
+				file = files[e.target.index],
 				index = e.target.index,
 				start_time = new Date().getTime(),
 				boundary = '------multipartformboundary' + (new Date).getTime(),
@@ -207,7 +208,7 @@
 			    
 			xhr.sendAsBinary(builder);  
 			
-			opts.uploadStarted(index, file, e.target.len);  
+			opts.uploadStarted(index, file, files_count);  
 			
 			xhr.onload = function() { 
 			    if (xhr.responseText) {
@@ -215,7 +216,7 @@
 				    timeDiff = now - start_time,
 				    result = opts.uploadFinished(index, file, eval( '[' + xhr.responseText + ']' ), timeDiff);
 					filesDone++;
-					if (filesDone == len - filesRejected) {
+					if (filesDone == files_count - filesRejected) {
 						afterAll();
 					}
 			    if (result === false) stop_loop = true;
