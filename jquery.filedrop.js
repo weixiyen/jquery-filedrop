@@ -82,13 +82,10 @@
 			builder += crlf;
 			builder += 'Content-Disposition: form-data; name="'+i+'"';
 			builder += crlf;
+			builder += crlf;
 			builder += val;
 			builder += crlf;
 		});
-		
-		builder += dashdash;
-		builder += boundary;
-		builder += crlf;
 		
 		builder += dashdash;
 		builder += boundary;
