@@ -219,7 +219,7 @@
 			    if (xhr.responseText) {
 				var now = new Date().getTime(),
 				    timeDiff = now - start_time,
-				    result = opts.uploadFinished(index, file, eval( '[' + xhr.responseText + ']' ), timeDiff);
+				    result = opts.uploadFinished(index, file, jQuery.parseJSON(xhr.responseText), timeDiff);
 					filesDone++;
 					if (filesDone == files_count - filesRejected) {
 						afterAll();
