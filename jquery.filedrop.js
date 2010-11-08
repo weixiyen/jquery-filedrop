@@ -162,7 +162,7 @@
 						
 					reader.index = i;
 					if (files[i].size > max_file_size) {
-						opts.error(errors[2], reader.file);
+						opts.error(errors[2], files[i]);
 						return false;
 					}
 					
