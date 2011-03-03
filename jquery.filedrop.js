@@ -228,7 +228,7 @@
 	}
     
 	function getIndexBySize(size) {
-		for (var i=0; i < filesCount; i++) {
+		for (var i=0; i < files_count; i++) {
 			if (files[i].size == size) {
 				return i;
 			}
