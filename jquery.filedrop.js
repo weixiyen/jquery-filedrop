@@ -58,7 +58,7 @@
 	$.fn.filedrop = function(options) {
 		opts = $.extend( {}, default_opts, options );
 		
-		this.get(0).addEventListener("drop", drop, true);
+		for(i = 0; i < this.length; i++) this.get(i).addEventListener("drop", drop, true);
 		this.bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
 		
 		document.addEventListener("drop", docDrop, true);
