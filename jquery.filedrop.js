@@ -44,7 +44,7 @@
 			beforeEach: empty,
 			afterAll: empty,
 			rename: empty,
-			error: function(err, file){alert(err);},
+			error: function(err, file, i){alert(err);},
 			uploadStarted: empty,
 			uploadFinished: empty,
 			progressUpdated: empty,
@@ -162,8 +162,9 @@
 						
 					reader.index = i;
 					if (files[i].size > max_file_size) {
-						opts.error(errors[2], files[i]);
-						return false;
+						opts.error(errors[2], files[i], i);
+						filesRejected++;
+						continue;
 					}
 					
 					reader.onloadend = send;
