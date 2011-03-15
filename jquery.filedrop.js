@@ -24,7 +24,8 @@
  *
  */
 (function($){
-    
+
+	jQuery.event.props.push("dataTransfer");
 	var opts = {},
 		default_opts = {
 			url: '',
@@ -58,11 +59,8 @@
 	$.fn.filedrop = function(options) {
 		opts = $.extend( {}, default_opts, options );
 		
-		for(i = 0; i < this.length; i++) this.get(i).addEventListener("drop", drop, true);
-		this.bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
-		
-		document.addEventListener("drop", docDrop, true);
-		$(document).bind('dragenter', docEnter).bind('dragover', docOver).bind('dragleave', docLeave);
+		this.bind('drop', drop).bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
+		$(document).bind('drop', docDrop).bind('dragenter', docEnter).bind('dragover', docOver).bind('dragleave', docLeave);
 	};
      
 	function drop(e) {
