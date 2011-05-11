@@ -24,7 +24,8 @@
  *
  */
 (function($){
-    
+
+	jQuery.event.props.push("dataTransfer");
 	var opts = {},
 		default_opts = {
 			url: '',
@@ -43,7 +44,7 @@
 			beforeEach: empty,
 			afterAll: empty,
 			rename: empty,
-			error: function(err, file){alert(err);},
+			error: function(err, file, i){alert(err);},
 			uploadStarted: empty,
 			uploadFinished: empty,
 			progressUpdated: empty,
@@ -58,16 +59,18 @@
 	$.fn.filedrop = function(options) {
 		opts = $.extend( {}, default_opts, options );
 		
-		for(i = 0; i < this.length; i++) this.get(i).addEventListener("drop", drop, true);
-		this.bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
-		
-		document.addEventListener("drop", docDrop, true);
-		$(document).bind('dragenter', docEnter).bind('dragover', docOver).bind('dragleave', docLeave);
+		this.bind('drop', drop).bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
+		$(document).bind('drop', docDrop).bind('dragenter', docEnter).bind('dragover', docOver).bind('dragleave', docLeave);
 	};
      
 	function drop(e) {
 		opts.drop(e);
 		files = e.dataTransfer.files;
+		if (files === null || files === undefined) {
+			opts.error(errors[0]);
+			return false;
+		}
+		
 		files_count = files.length;
 		upload();
 		e.preventDefault();
@@ -159,11 +162,12 @@
 						
 					reader.index = i;
 					if (files[i].size > max_file_size) {
-						opts.error(errors[2], files[i]);
-						return false;
+						opts.error(errors[2], files[i], i);
+						filesRejected++;
+						continue;
 					}
 					
-					reader.addEventListener("loadend", send, false);
+					reader.onloadend = send;
 					reader.readAsBinaryString(files[i]);
 				} else {
 					filesRejected++;
