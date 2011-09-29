@@ -82,17 +82,24 @@
 			crlf = '\r\n',
 			builder = '';
 
-		$.each(opts.data, function(i, val) {
-	    	if (typeof val === 'function') val = val();
-			builder += dashdash;
-			builder += boundary;
-			builder += crlf;
-			builder += 'Content-Disposition: form-data; name="'+i+'"';
-			builder += crlf;
-			builder += crlf;
-			builder += val;
-			builder += crlf;
-		});
+		if (opts.data) {
+			var params = $.param(opts.data).split(/&/);
+
+			$.each(params, function() {
+				var pair = this.split(/=/, 2);
+				var name = decodeURI(pair[0]);
+				var val = decodeURI(pair[1]);
+
+				builder += dashdash;
+				builder += boundary;
+				builder += crlf;
+				builder += 'Content-Disposition: form-data; name="' + name + '"';
+				builder += crlf;
+				builder += crlf;
+				builder += val;
+				builder += crlf;
+			});
+		}
 		
 		builder += dashdash;
 		builder += boundary;
