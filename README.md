@@ -89,6 +89,20 @@ Usage Example
 		}
 	});
 	
+	
+
+Queueing Usage Example
+----------------------
+
+To enable the upload of a large number of files, a queueing option was added that enables you to configure how many files should be processed at a time.  The upload will process that number in parallel, backing off and then processing the remaining ones in the queue as empty upload slots become available.
+
+This is controlled via one of two parameters:
+
+    maxfiles: 10    // Limit the total number of uploads possible - default behaviour
+    queuefiles: 2   // Control how many uploads are attempted in parallel (ignores maxfiles setting)
+
+Not setting a value for queuefiles will disable queueing.
+
 Contributions
 ---------------
 [Reactor5](http://github.com/Reactor5/) (Brian Hicks) 
