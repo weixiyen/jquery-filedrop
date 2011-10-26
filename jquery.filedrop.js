@@ -244,7 +244,7 @@
 
     var send = function(e) {
 
-      var fileIndex = e.srcElement.index;
+      var fileIndex = ((typeof(e.srcElement) === "undefined") ? e.target : e.srcElement).index
 
       // Sometimes the index is not attached to the
       // event object. Find it by size. Hack for sure.
