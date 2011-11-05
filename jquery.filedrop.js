@@ -80,7 +80,7 @@
     return false;
   }
 
-  function getBuilder(filename, filedata, boundary) {
+  function getBuilder(filename, filedata, mime, boundary) {
     var dashdash = '--',
         crlf = '\r\n',
         builder = '';
@@ -111,7 +111,7 @@
     builder += '; filename="' + filename + '"';
     builder += crlf;
 
-    builder += 'Content-Type: application/octet-stream';
+    builder += 'Content-Type: ' + mime;
     builder += crlf;
     builder += crlf;
 
@@ -261,10 +261,11 @@
           builder;
 
       newName = rename(file.name);
+      mime = file.type
       if (typeof newName === "string") {
-        builder = getBuilder(newName, e.target.result, boundary);
+        builder = getBuilder(newName, e.target.result, mime, boundary);
       } else {
-        builder = getBuilder(file.name, e.target.result, boundary);
+        builder = getBuilder(file.name, e.target.result, mime, boundary);
       }
 
       upload.index = index;
