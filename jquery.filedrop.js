@@ -29,6 +29,7 @@
 
   var opts = {},
       default_opts = {
+      fallback_id: '',
       url: '',
       refresh: 1000,
       paramname: 'userfile',
@@ -65,6 +66,13 @@
 
     this.bind('drop', drop).bind('dragenter', dragEnter).bind('dragover', dragOver).bind('dragleave', dragLeave);
     $(document).bind('drop', docDrop).bind('dragenter', docEnter).bind('dragover', docOver).bind('dragleave', docLeave);
+
+    $('#' + opts.fallback_id).change(function(e) {
+      opts.drop(e)
+      files = e.target.files
+      files_count = files.length
+      upload()
+    })
   };
 
   function drop(e) {
@@ -80,7 +88,7 @@
     return false;
   }
 
-  function getBuilder(filename, filedata, mime, boundary) {
+  function getBuilder(filename, filedata, boundary) {
     var dashdash = '--',
         crlf = '\r\n',
         builder = '';
@@ -111,7 +119,7 @@
     builder += '; filename="' + filename + '"';
     builder += crlf;
 
-    builder += 'Content-Type: ' + mime;
+    builder += 'Content-Type: application/octet-stream';
     builder += crlf;
     builder += crlf;
 
@@ -261,11 +269,10 @@
           builder;
 
       newName = rename(file.name);
-      mime = file.type
       if (typeof newName === "string") {
-        builder = getBuilder(newName, e.target.result, mime, boundary);
+        builder = getBuilder(newName, e.target.result, boundary);
       } else {
-        builder = getBuilder(file.name, e.target.result, mime, boundary);
+        builder = getBuilder(file.name, e.target.result, boundary);
       }
 
       upload.index = index;
