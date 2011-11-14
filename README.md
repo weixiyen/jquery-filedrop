@@ -1,14 +1,14 @@
 jQuery filedrop plugin - html5 drag desktop files into browser
 ==============================
-jQuery filedrop uses the HTML5 File API to allow users 
-to drag multiple files from desktop to the browser, uploading 
+jQuery filedrop uses the HTML5 File API to allow users
+to drag multiple files from desktop to the browser, uploading
 each file to a user-specified URL.
 
 filedrop uses HTML5 FileReader() to read file data.
 
 Browser Support
 ---------------
-Currently only Firefox 3.6+ supports FileReader, 
+Currently only Firefox 3.6+ supports FileReader,
 but the next version of WebKit browsers (Chrome + Safari) will also support this,
 making filedrop future-compatible.
 
@@ -18,9 +18,10 @@ Usage Example
 ---------------
 
 	$('#dropzone').filedrop({
+        fallback_id: 'upload_button'    // an identifier of a standard file input element
 		url: 'upload.php',				// upload handler, handles each file separately
 		paramname: 'userfile',			// POST parameter name used on serverside to reference file
-		data: { 
+		data: {
 			param1: 'value1', 			// send POST variables
 			param2: function(){
 				return calculated_data; // calculate data at time of upload
@@ -88,8 +89,8 @@ Usage Example
 			// runs after all files have been uploaded or otherwise dealt with
 		}
 	});
-	
-	
+
+
 
 Queueing Usage Example
 ----------------------
@@ -105,5 +106,5 @@ Not setting a value for queuefiles will disable queueing.
 
 Contributions
 ---------------
-[Reactor5](http://github.com/Reactor5/) (Brian Hicks) 
+[Reactor5](http://github.com/Reactor5/) (Brian Hicks)
 [jpb0104](http://github.com/jpb0104)
