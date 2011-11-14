@@ -8,9 +8,9 @@ filedrop uses HTML5 FileReader() to read file data.
 
 Browser Support
 ---------------
-Currently only Firefox 3.6+ supports FileReader,
-but the next version of WebKit browsers (Chrome + Safari) will also support this,
-making filedrop future-compatible.
+Works on Chrome and Firefox 3.6+.
+
+Would love contribution for Safari support.
 
 filedrop also allows users to define functions to handle the 'BrowserNotSupported' error.
 
