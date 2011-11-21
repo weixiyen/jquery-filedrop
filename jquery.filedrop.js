@@ -38,6 +38,7 @@
       queuefiles: 0,          // Max files before queueing (for large volume uploads)
       queuewait: 200,         // Queue wait time if full
       data: {},
+      headers: {},
       drop: empty,
       dragEnter: empty,
       dragOver: empty,
@@ -286,6 +287,11 @@
 
       xhr.open("POST", opts.url, true);
       xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
+
+      // Add headers
+      $.each(opts.headers, function(k, v) {
+        xhr.setRequestHeader(k, v);
+      });
 
       xhr.sendAsBinary(builder);
 
