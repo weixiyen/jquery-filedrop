@@ -27,6 +27,9 @@ Usage Example
 				return calculated_data; // calculate data at time of upload
 			},
 		},
+		headers: { 			// Send additional request headers
+			'header': 'value'
+		},
 		error: function(err, file) {
 			switch(err) {
 				case 'BrowserNotSupported':
