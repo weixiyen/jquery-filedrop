@@ -32,6 +32,7 @@
       url: '',
       refresh: 1000,
       paramname: 'userfile',
+      allowedfiletypes:[],
       maxfiles: 25,           // Ignored if queuefiles is set > 0
       maxfilesize: 1,         // MB file size limit
       queuefiles: 0,          // Max files before queueing (for large volume uploads)
@@ -56,7 +57,7 @@
       progressUpdated: empty,
       speedUpdated: empty
       },
-      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge"],
+      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed"],
       doc_leave_timer, stop_loop = false,
       files_count = 0,
       files;
@@ -161,6 +162,14 @@
         if (!files) {
           opts.error(errors[0]);
           return false;
+        }
+        if(opts.allowedfiletypes.push && opts.allowedfiletypes.length){
+          for(var fileIndex = files.length;fileIndex--;){
+            if(!files[fileIndex].type || $.inArray(files[fileIndex].type, opts.allowedfiletypes) < 0){
+              opts.error(errors[3]);
+              return false;
+            }
+          }
         }
 
         var filesDone = 0,
