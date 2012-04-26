@@ -399,6 +399,7 @@
           opts.docLeave(e);
         }, 200);
       }
+    return this;
   };
   function empty() {}
 
