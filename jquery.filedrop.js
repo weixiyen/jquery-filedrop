@@ -97,8 +97,8 @@
 
           $.each(params, function() {
             var pair = this.split(/=/, 2);
-            var name = decodeURI(pair[0]);
-            var val = decodeURI(pair[1]);
+            var name = decodeURIComponent(pair[0]);
+            var val = decodeURIComponent(pair[1]);
 
             builder += dashdash;
             builder += boundary;
