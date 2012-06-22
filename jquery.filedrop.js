@@ -324,6 +324,12 @@
               }
               if (result === false) stop_loop = true;
             }
+            
+            //Pass any errors to the error option
+            if(xhr.status != 200){
+              opts.error(xhr.statusText);
+            }
+            
           };
 
         }
