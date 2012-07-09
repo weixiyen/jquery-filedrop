@@ -29,6 +29,7 @@
 
   var default_opts = {
       fallback_id: '',
+      fallback_elem: [],
       url: '',
       refresh: 1000,
       paramname: 'userfile',
@@ -68,12 +69,15 @@
     this.on('drop', drop).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
-    $('#' + opts.fallback_id).change(function(e) {
+    function change(e) {
       opts.drop(e);
       files = e.target.files;
       files_count = files.length;
       upload();
-    });
+    }
+
+    $('#' + opts.fallback_id).change(change);
+    $(opts.fallback_elem).change(change);
     
     function drop(e) {
         opts.drop(e);
