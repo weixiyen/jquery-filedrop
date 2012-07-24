@@ -101,7 +101,6 @@ Usage Example
 	});
 
 
-
 Queueing Usage Example
 ----------------------
 
@@ -116,5 +115,5 @@ Not setting a value for queuefiles will disable queueing.
 
 Contributions
 ---------------
-[Reactor5](http://github.com/Reactor5/) (Brian Hicks)
-[jpb0104](http://github.com/jpb0104)
+* [Reactor5](http://github.com/Reactor5/) (Brian Hicks)
+* [jpb0104](http://github.com/jpb0104)
