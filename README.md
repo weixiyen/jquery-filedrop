@@ -18,7 +18,7 @@ Usage Example
 ---------------
 
 	$('#dropzone').filedrop({
-        fallback_id: 'upload_button',   // an identifier of a standard file input element
+		fallback_id: 'upload_button',   // an identifier of a standard file input element
 		url: 'upload.php',				// upload handler, handles each file separately
 		paramname: 'userfile',			// POST parameter name used on serverside to reference file
 		data: {
@@ -81,9 +81,9 @@ Usage Example
 			// progress is the integer value of file being uploaded percentage to completion
 		},
 		globalProgressUpdated: function(progress) {
-		    // progress for all the files uploaded on the current instance (percentage)
-            // ex: $('#progress div').width(progress+"%");
-        },
+			// progress for all the files uploaded on the current instance (percentage)
+			// ex: $('#progress div').width(progress+"%");
+		},
 		speedUpdated: function(i, file, speed) {
 			// speed in kb/s
 		},
