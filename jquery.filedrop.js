@@ -57,6 +57,7 @@
       uploadStarted: empty,
       uploadFinished: empty,
       progressUpdated: empty,
+      globalProgressUpdated: empty,
       speedUpdated: empty
       },
       errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed"],
@@ -65,7 +66,8 @@
       files;
 
   $.fn.filedrop = function(options) {
-    var opts = $.extend({}, default_opts, options);
+    var opts = $.extend({}, default_opts, options),
+        global_progress = [];
 
     this.on('drop', drop).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
@@ -143,6 +145,9 @@
           this.currentProgress = percentage;
           opts.progressUpdated(this.index, this.file, this.currentProgress);
 
+          global_progress[this.global_progress_index] = this.currentProgress;
+          globalProgress();
+
           var elapsed = new Date().getTime();
           var diffTime = elapsed - this.currentStart;
           if (diffTime >= opts.refresh) {
@@ -156,6 +161,21 @@
       }
     }
 
+    function globalProgress() {
+      if (global_progress.length === 0) {
+        return;
+      }
+
+      var total = 0, index;
+      for (index in global_progress) {
+        if(global_progress.hasOwnProperty(index)) {
+          total = total + global_progress[index];
+        }
+      }
+
+      opts.globalProgressUpdated(Math.round(total / global_progress.length));
+    }
+
     // Respond to an upload
     function upload() {
       stop_loop = false;
@@ -165,9 +185,9 @@
         return false;
       }
 
-      if(opts.allowedfiletypes.push && opts.allowedfiletypes.length){
-        for(var fileIndex = files.length;fileIndex--;){
-          if(!files[fileIndex].type || $.inArray(files[fileIndex].type, opts.allowedfiletypes) < 0){
+      if (opts.allowedfiletypes.push && opts.allowedfiletypes.length) {
+        for(var fileIndex = files.length;fileIndex--;) {
+          if(!files[fileIndex].type || $.inArray(files[fileIndex].type, opts.allowedfiletypes) < 0) {
             opts.error(errors[3]);
             return false;
           }
@@ -283,6 +303,7 @@
             index = e.target.index,
             start_time = new Date().getTime(),
             boundary = '------multipartformboundary' + (new Date()).getTime(),
+            global_progress_index = global_progress.length,
             builder,
             newName = rename(file.name),
             mime = file.type;
@@ -298,6 +319,7 @@
         upload.downloadStartTime = start_time;
         upload.currentStart = start_time;
         upload.currentProgress = 0;
+        upload.global_progress_index = global_progress_index;
         upload.startData = 0;
         upload.addEventListener("progress", progress, false);
 
@@ -310,6 +332,9 @@
         });
 
         xhr.sendAsBinary(builder);
+
+        global_progress[global_progress_index] = 0;
+        globalProgress();
 
         opts.uploadStarted(index, file, files_count);
 
@@ -330,6 +355,9 @@
             // Add to donequeue
             doneQueue.push(fileIndex);
 
+            // Make sure the global progress is updated
+            global_progress[global_progress_index] = 100;
+
             if (filesDone === (files_count - filesRejected)) {
               afterAll();
             }
@@ -339,7 +367,7 @@
           }
 
           // Pass any errors to the error option
-          if(xhr.status != 200) {
+          if (xhr.status != 200) {
             opts.error(xhr.statusText);
           }
         };
