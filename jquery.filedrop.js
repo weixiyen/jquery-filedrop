@@ -65,8 +65,7 @@
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options);
-
-    this.on('drop', drop).on('dragstart', dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
+    this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
     $('#' + opts.fallback_id).change(function(e) {
@@ -360,10 +359,6 @@
 
       function afterAll() {
         return opts.afterAll();
-      }
-
-      function dragStart(e) {
-        opts.dragStart.call(this, e);
       }
 
       function dragEnter(e) {
