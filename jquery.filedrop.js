@@ -357,6 +357,7 @@
 
             // Make sure the global progress is updated
             global_progress[global_progress_index] = 100;
+            globalProgress();
 
             if (filesDone === (files_count - filesRejected)) {
               afterAll();
