@@ -312,7 +312,7 @@
                 serverResponse = jQuery.parseJSON(xhr.responseText);
               }
               catch (e) {
-                // empty
+                serverResponse = xhr.responseText;
               }
 
               var now = new Date().getTime(),
