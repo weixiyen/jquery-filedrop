@@ -306,9 +306,18 @@
 
           xhr.onload = function() {
             if (xhr.responseText) {
+              var serverResponse;
+
+              try {
+                serverResponse = jQuery.parseJSON(xhr.responseText);
+              }
+              catch (e) {
+                serverResponse = xhr.responseText;
+              }
+
               var now = new Date().getTime(),
                   timeDiff = now - start_time,
-                  result = opts.uploadFinished(index, file, jQuery.parseJSON(xhr.responseText), timeDiff, xhr);
+                  result = opts.uploadFinished(index, file, serverResponse, timeDiff, xhr);
               filesDone++;
 
               // Remove from processing queue
