@@ -236,7 +236,9 @@
     	              filesRejected++;
     	              return true;
     	            }
-    	            reader.onloadend = send;
+    	            reader.onloadend = !opts.beforeSend ? send : function (e) {
+    	              opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
+    	            }
     	            reader.readAsBinaryString(files[fileIndex]);
 
     	          } else {
