@@ -166,7 +166,7 @@
         if(opts.allowedfiletypes.push && opts.allowedfiletypes.length){
           for(var fileIndex = files.length;fileIndex--;){
             if(!files[fileIndex].type || $.inArray(files[fileIndex].type, opts.allowedfiletypes) < 0){
-              opts.error(errors[3]);
+              opts.error(errors[3], files[fileIndex]);
               return false;
             }
           }
