@@ -95,6 +95,11 @@ Usage Example
 			// file is a file object
 			// return false to cancel upload
 		},
+		beforeSend: function(file, i, done) {
+			// file is a file object
+			// i is the file index
+			// call done() to start the upload
+		},
 		afterAll: function() {
 			// runs after all files have been uploaded or otherwise dealt with
 		}

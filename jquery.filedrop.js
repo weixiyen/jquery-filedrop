@@ -42,6 +42,7 @@
       data: {},
       headers: {},
       drop: empty,
+      dragStart: empty,
       dragEnter: empty,
       dragOver: empty,
       dragLeave: empty,
@@ -69,7 +70,7 @@
     var opts = $.extend({}, default_opts, options),
         global_progress = [];
 
-    this.on('drop', drop).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
+    this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
     $('#' + opts.fallback_id).change(function(e) {
@@ -78,11 +79,11 @@
       files_count = files.length;
       upload();
     });
-    
+
     function drop(e) {
-      opts.drop(e);
+      opts.drop.call(this, e);
       files = e.dataTransfer.files;
-      if (files === null || files === undefined) {
+      if (files === null || files === undefined || files.length === 0) {
         opts.error(errors[0]);
         return false;
       }
@@ -188,7 +189,7 @@
       if (opts.allowedfiletypes.push && opts.allowedfiletypes.length) {
         for(var fileIndex = files.length;fileIndex--;) {
           if(!files[fileIndex].type || $.inArray(files[fileIndex].type, opts.allowedfiletypes) < 0) {
-            opts.error(errors[3]);
+            opts.error(errors[3], files[fileIndex]);
             return false;
           }
         }
@@ -230,18 +231,14 @@
 
         // Check to see if are in queue mode
         if (opts.queuefiles > 0 && processingQueue.length >= opts.queuefiles) {
-
           return pause(opts.queuewait);
-
         } else {
-
           // Take first thing off work queue
           fileIndex = workQueue[0];
           workQueue.splice(0, 1);
 
           // Add to processing queue
           processingQueue.push(fileIndex);
-
         }
 
         try {
@@ -264,7 +261,11 @@
               filesRejected++;
               return true;
             }
-            reader.onloadend = send;
+
+            reader.onloadend = !opts.beforeSend ? send : function (e) {
+              opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
+            };
+
             reader.readAsBinaryString(files[fileIndex]);
 
           } else {
@@ -340,9 +341,18 @@
 
         xhr.onload = function() {
           if (xhr.responseText) {
+            var serverResponse;
+
+            try {
+              serverResponse = jQuery.parseJSON(xhr.responseText);
+            }
+            catch (e) {
+              serverResponse = xhr.responseText;
+            }
+
             var now = new Date().getTime(),
                 timeDiff = now - start_time,
-                result = opts.uploadFinished(index, file, jQuery.parseJSON(xhr.responseText), timeDiff, xhr);
+                result = opts.uploadFinished(index, file, serverResponse, timeDiff, xhr);
             filesDone++;
 
             // Remove from processing queue
@@ -403,49 +413,53 @@
     function dragEnter(e) {
       clearTimeout(doc_leave_timer);
       e.preventDefault();
-      opts.dragEnter(e);
+      opts.dragEnter.call(this, e);
     }
 
     function dragOver(e) {
       clearTimeout(doc_leave_timer);
       e.preventDefault();
-      opts.docOver(e);
-      opts.dragOver(e);
+      opts.docOver.call(this, e);
+      opts.dragOver.call(this, e);
     }
 
     function dragLeave(e) {
       clearTimeout(doc_leave_timer);
-      opts.dragLeave(e);
+      opts.dragLeave.call(this, e);
       e.stopPropagation();
     }
 
     function docDrop(e) {
       e.preventDefault();
-      opts.docLeave(e);
+      opts.docLeave.call(this, e);
       return false;
     }
 
     function docEnter(e) {
       clearTimeout(doc_leave_timer);
       e.preventDefault();
-      opts.docEnter(e);
+      opts.docEnter.call(this, e);
       return false;
     }
 
     function docOver(e) {
       clearTimeout(doc_leave_timer);
       e.preventDefault();
-      opts.docOver(e);
+      opts.docOver.call(this, e);
       return false;
     }
 
     function docLeave(e) {
-      doc_leave_timer = setTimeout(function() {
-        opts.docLeave(e);
-      }, 200);
+      doc_leave_timer = setTimeout((function(_this) {
+        return function() {
+          opts.docLeave.call(_this, e);
+        };
+      })(this), 200);
     }
+
     return this;
   };
+
   function empty() {}
 
   try {
