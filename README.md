@@ -18,7 +18,7 @@ Usage Example
 ---------------
 
 	$('#dropzone').filedrop({
-        fallback_id: 'upload_button',    // an identifier of a standard file input element
+		fallback_id: 'upload_button',   // an identifier of a standard file input element
 		url: 'upload.php',				// upload handler, handles each file separately
 		paramname: 'userfile',			// POST parameter name used on serverside to reference file
 		data: {
@@ -43,6 +43,8 @@ Usage Example
 					// FileTooLarge also has access to the file which was too large
 					// use file.name to reference the filename of the culprit file
 					break;
+			    case 'FileTypeNotAllowed':
+			        // The file type is not in the specified list 'allowedfiletypes'
 				default:
 					break;
 			}
@@ -78,6 +80,10 @@ Usage Example
 			// this function is used for large files and updates intermittently
 			// progress is the integer value of file being uploaded percentage to completion
 		},
+		globalProgressUpdated: function(progress) {
+			// progress for all the files uploaded on the current instance (percentage)
+			// ex: $('#progress div').width(progress+"%");
+		},
 		speedUpdated: function(i, file, speed) {
 			// speed in kb/s
 		},
@@ -100,7 +106,6 @@ Usage Example
 	});
 
 
-
 Queueing Usage Example
 ----------------------
 
@@ -115,5 +120,5 @@ Not setting a value for queuefiles will disable queueing.
 
 Contributions
 ---------------
-[Reactor5](http://github.com/Reactor5/) (Brian Hicks)
-[jpb0104](http://github.com/jpb0104)
+* [Reactor5](http://github.com/Reactor5/) (Brian Hicks)
+* [jpb0104](http://github.com/jpb0104)
