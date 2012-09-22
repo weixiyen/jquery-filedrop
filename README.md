@@ -49,7 +49,7 @@ Usage Example
 					break;
 			}
 		},
-		allowedfiletypes: ['image/jpg','image/png','image/gif'],	// filetypes allowed by Content-Type.  Empty array means no restrictions
+		allowedfiletypes: ['image/jpeg','image/png','image/gif'],	// filetypes allowed by Content-Type.  Empty array means no restrictions
 		maxfiles: 25,
 		maxfilesize: 20, 	// max file size in MBs
 		dragOver: function() {
