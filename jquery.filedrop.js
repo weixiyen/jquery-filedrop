@@ -309,6 +309,10 @@
             newName = rename(file.name),
             mime = file.type;
 
+        if (opts.withCredentials) {
+          xhr.withCredentials = opts.withCredentials;
+        }
+
         if (typeof newName === "string") {
           builder = getBuilder(newName, e.target.result, mime, boundary);
         } else {
