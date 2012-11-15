@@ -61,7 +61,7 @@
       globalProgressUpdated: empty,
       speedUpdated: empty
       },
-      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed"],
+      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError"],
       doc_leave_timer, stop_loop = false,
       files_count = 0,
       files;
@@ -262,10 +262,27 @@
               return true;
             }
 
+            reader.onerror = function(e) {
+                switch(e.target.error.code) {
+                    case e.target.error.NOT_FOUND_ERR:
+                        opts.error(errors[4]);
+                        return false;
+                    case e.target.error.NOT_READABLE_ERR:
+                        opts.error(errors[5]);
+                        return false;
+                    case e.target.error.ABORT_ERR:
+                        opts.error(errors[6]);
+                        return false;
+                    default:
+                        opts.error(errors[7]);
+                        return false;
+                };
+            };
+
             reader.onloadend = !opts.beforeSend ? send : function (e) {
               opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
             };
-
+            
             reader.readAsBinaryString(files[fileIndex]);
 
           } else {
