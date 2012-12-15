@@ -52,7 +52,7 @@
       beforeEach: empty,
       afterAll: empty,
       rename: empty,
-      error: function(err, file, i) {
+      error: function(err, file, i, status) {
         alert(err);
       },
       uploadStarted: empty,
@@ -406,8 +406,8 @@
           
 
           // Pass any errors to the error option
-          if (xhr.status < 200 && xhr.status > 299) {
-            opts.error(xhr.statusText);
+          if (xhr.status < 200 || xhr.status > 299) {
+            opts.error(xhr.statusText, file, fileIndex, xhr.status);
           }
         };
       };
