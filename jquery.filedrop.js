@@ -68,10 +68,16 @@
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
-        global_progress = [];
+        global_progress = [],
+        $this = $(this);
+
+    // We want to hide the fallback
+    $('#' + opts.fallback_id).css('display', 'block').css('width', '0').css('height', '0');
 
     this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
-    $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
+    $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave)
+
+    $this.on('click', click);
 
     $('#' + opts.fallback_id).change(function(e) {
       opts.drop(e);
@@ -79,6 +85,10 @@
       files_count = files.length;
       upload();
     });
+
+    function click(e) {
+      $('#' + opts.fallback_id).trigger('click');
+    }
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
