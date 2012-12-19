@@ -41,6 +41,7 @@
       queuewait: 200,         // Queue wait time if full
       data: {},
       headers: {},
+      confirm: function(){return true;},
       drop: empty,
       dragStart: empty,
       dragEnter: empty,
@@ -88,8 +89,10 @@
         return false;
       }
       files_count = files.length;
-      upload();
-      e.preventDefault();
+      if (opts.confirm.call(this,e) == true){
+        upload();
+        e.preventDefault();
+      }
       return false;
     }
 
@@ -488,7 +491,7 @@
     return this;
   };
 
-  function empty() {}
+  function empty() {return true;}
 
   try {
     if (XMLHttpRequest.prototype.sendAsBinary) {
