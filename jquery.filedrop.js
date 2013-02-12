@@ -61,7 +61,7 @@
       globalProgressUpdated: empty,
       speedUpdated: empty
       },
-      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError"],
+      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError", "FileExtensionNotAllowed"],
       doc_leave_timer, stop_loop = false,
       files_count = 0,
       files;
@@ -191,6 +191,21 @@
           if(!files[fileIndex].type || $.inArray(files[fileIndex].type, opts.allowedfiletypes) < 0) {
             opts.error(errors[3], files[fileIndex]);
             return false;
+          }
+        }
+      }
+      
+      if (opts.allowedfileextensions.push && opts.allowedfileextensions.length) {
+        for(var fileIndex = files.length;fileIndex--;) {
+          var allowedextension = false;
+          for (i=0;i<opts.allowedfileextensions.length;i++){
+            if (file.name.substr(file.name.length-opts.allowedfileextensions[i].length) == opts.allowedfileextensions[i]) {
+              allowedextension = true;
+            }
+            if (!allowedentension){
+              opts.error(errors[8], files[fileIndex]);
+              return false;
+            }
           }
         }
       }
