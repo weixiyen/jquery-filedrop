@@ -44,8 +44,11 @@ Usage Example
 					// FileTooLarge also has access to the file which was too large
 					// use file.name to reference the filename of the culprit file
 					break;
-			    case 'FileTypeNotAllowed':
-			        // The file type is not in the specified list 'allowedfiletypes'
+			        case 'FileTypeNotAllowed':
+			                // The file type is not in the specified list 'allowedfiletypes'
+			                break;
+                                case 'FileExtensionNotAllowed':
+                                        // The file extension is not in the specified list 'allowedfileextensions'
 				default:
 					break;
 			}
