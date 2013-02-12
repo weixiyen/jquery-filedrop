@@ -202,7 +202,7 @@
             if (files[fileIndex].name.substr(files[fileIndex].name.length-opts.allowedfileextensions[i].length) == opts.allowedfileextensions[i]) {
               allowedextension = true;
             }
-            if (!allowedentension){
+            if (!allowedextension){
               opts.error(errors[8], files[fileIndex]);
               return false;
             }
