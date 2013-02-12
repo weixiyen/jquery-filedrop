@@ -199,7 +199,7 @@
         for(var fileIndex = files.length;fileIndex--;) {
           var allowedextension = false;
           for (i=0;i<opts.allowedfileextensions.length;i++){
-            if (file.name.substr(file.name.length-opts.allowedfileextensions[i].length) == opts.allowedfileextensions[i]) {
+            if (files[fileIndex].name.substr(files[fileIndex].name.length-opts.allowedfileextensions[i].length) == opts.allowedfileextensions[i]) {
               allowedextension = true;
             }
             if (!allowedentension){
