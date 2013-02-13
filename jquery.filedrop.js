@@ -99,7 +99,7 @@
           builder = '';
 
       if (opts.data) {
-        var params = $.param(opts.data).split(/&/);
+        var params = $.param(opts.data).replace(/\+/g, ' ').split(/&/);
 
         $.each(params, function() {
           var pair = this.split("=", 2),
