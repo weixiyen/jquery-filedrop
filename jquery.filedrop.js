@@ -106,6 +106,10 @@
               name = decodeURIComponent(pair[0]),
               val  = decodeURIComponent(pair[1]);
 
+          if (pair.length !== 2) {
+              return;
+          }
+
           builder += dashdash;
           builder += boundary;
           builder += crlf;
