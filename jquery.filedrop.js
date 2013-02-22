@@ -53,6 +53,7 @@
         docEnter: empty,
         docOver: empty,
         docLeave: empty,
+        docDrop: empty,
         beforeEach: empty,
         afterAll: empty,
         rename: empty,
@@ -375,7 +376,6 @@
                 } else {
                     xhr.open("POST", opts.url, true);
                 }
-	    
 
                 // Add headers
                 $.each(opts.headers, function(k, v) {
@@ -383,10 +383,12 @@
                 });
                                 
                 if ( opts.sendBoundary ) {
+                    // we use browsers native functionality 
                     var f = new FormData();
                     f.append(typeof(opts.paramname) === "function" ? opts.paramname() : opts.paramname, file);
                     xhr.send(f);
                 } else { 
+                    // we need to simulate the browser native functionality
                     var boundary = '------multipartformboundary' + (new Date()).getTime();
                     xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
                     if (typeof newName === "string") {
@@ -441,7 +443,6 @@
                         stop_loop = true;
                     }
           
-
                     // Pass any errors to the error option
                     if (xhr.status < 200 || xhr.status > 299) {
                         opts.error(xhr.statusText, file, fileIndex, xhr.status);
@@ -495,8 +496,11 @@
         }
 
         function docDrop(e) {
+            clearTimeout(doc_leave_timer);
             e.preventDefault();
-            opts.docLeave.call(this, e);
+            opts.docDrop.call(this, e);
+            opts.dragLeave.call(this, e);
+            e.stopPropagation();
             return false;
         }
 
