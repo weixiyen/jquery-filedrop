@@ -336,7 +336,7 @@
                     process();
                 }
             };
-
+            
             var send = function(e) {
 
                 var fileIndex = ((typeof(e.srcElement) === "undefined") ? e.target : e.srcElement).index;
@@ -499,6 +499,7 @@
             clearTimeout(doc_leave_timer);
             e.preventDefault();
             opts.docDrop.call(this, e);
+            opts.docLeave.call(this, e);
             opts.dragLeave.call(this, e);
             e.stopPropagation();
             return false;
