@@ -25,7 +25,7 @@
  *  See README at project homepage
  *
  */
-;(function($) {
+(function($) {
 
   jQuery.event.props.push("dataTransfer");
 

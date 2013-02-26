@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>jQuery.filedrop</id>
+    <version>$version$</version>
+    <authors>Weixi Yen</authors>
+    <description>jQuery plugin for html5 dragging files from desktop to browser.
+Allows sending of extra parameters with file.
+Works with Firefox 3.6+
+Future-compliant with HTML5 spec (will work with Webkit browsers and IE9).</description>
+    <summary>jQuery plugin for html5 dragging files from desktop to browser.</summary>
+    <language>en-us</language>
+    <iconUrl>https://raw.github.com/mrantix/jquery-filedrop/master/graphics/jquery-filedrop_128x128.png</iconUrl>
+    <projectUrl>http://www.github.com/weixiyen/jquery-filedrop</projectUrl>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <tags>jquery upload dragdrop</tags>
+    <dependencies>
+      <dependency id="jQuery" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Content\Scripts\jquery.filedrop.js" target="Content\Scripts\jquery.filedrop.js" />
+    <file src="Content\Scripts\jquery.filedrop.min.js" target="Content\Scripts\jquery.filedrop.min.js" />
+  </files>
+</package>
