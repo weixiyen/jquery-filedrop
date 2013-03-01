@@ -57,6 +57,9 @@
         beforeEach: empty,
         afterAll: empty,
         rename: empty,
+        confirm: function(){
+            return true;
+        },
         error: function(err, file, i, status) {
             alert(err);
         },
@@ -102,8 +105,10 @@
             }
             
             files_count = files.length;
-            upload();
-            e.preventDefault();
+            if ( opts.confirm.call(this, e) === true) {
+                upload();
+                e.preventDefault();
+            }
             
             return false;
         }
