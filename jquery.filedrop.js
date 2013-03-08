@@ -64,7 +64,8 @@
       errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError"],
       doc_leave_timer, stop_loop = false,
       files_count = 0,
-      files;
+      files,
+      useBinaryUrl = !jQuery.isFunction(new FileReader().readAsBinaryString);
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
@@ -127,8 +128,12 @@
       builder += 'Content-Type: ' + mime;
       builder += crlf;
       builder += crlf;
-
-      builder += filedata;
+      
+      if (useBinaryUrl) {
+        builder += atob(filedata.split(',')[1]);
+      }else {
+        builder += filedata;
+      }
       builder += crlf;
 
       builder += dashdash;
@@ -282,10 +287,10 @@
             reader.onloadend = !opts.beforeSend ? send : function (e) {
               opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
             };
-            if (reader.readAsBinaryString) {
+            if (!useBinaryUrl) {
                 reader.readAsBinaryString(files[fileIndex]);
-            }else {
-                reader.readAsText(files[fileIndex]);
+            } else {
+                reader.readAsDataURL(files[fileIndex]);
             }
 
           } else {
