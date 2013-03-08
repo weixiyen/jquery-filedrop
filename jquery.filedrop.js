@@ -282,8 +282,11 @@
             reader.onloadend = !opts.beforeSend ? send : function (e) {
               opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
             };
-            
-            reader.readAsBinaryString(files[fileIndex]);
+            if (reader.readAsBinaryString) {
+                reader.readAsBinaryString(files[fileIndex]);
+            }else {
+                reader.readAsText(files[fileIndex]);
+            }
 
           } else {
             filesRejected++;
@@ -295,6 +298,7 @@
               processingQueue.splice(key, 1);
             }
           });
+          console.error(err);
           opts.error(errors[0]);
           return false;
         }
@@ -307,7 +311,7 @@
 
       var send = function(e) {
 
-        var fileIndex = ((typeof(e.srcElement) === "undefined") ? e.target : e.srcElement).index;
+        var fileIndex = (!(e.srcElement)? e.target : e.srcElement).index;
 
         // Sometimes the index is not attached to the
         // event object. Find it by size. Hack for sure.
