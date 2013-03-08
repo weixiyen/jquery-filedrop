@@ -65,7 +65,7 @@
       doc_leave_timer, stop_loop = false,
       files_count = 0,
       files,
-      useBinaryUrl = !jQuery.isFunction(new FileReader().readAsBinaryString);
+      useBinaryUrl = !jQuery.isFunction(FileReader.prototype.readAsBinaryString);
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
@@ -303,7 +303,7 @@
               processingQueue.splice(key, 1);
             }
           });
-          console.error(err);
+          if (window.console){ console.error(err); }
           opts.error(errors[0]);
           return false;
         }
@@ -316,7 +316,7 @@
 
       var send = function(e) {
 
-        var fileIndex = (!(e.srcElement)? e.target : e.srcElement).index;
+        var fileIndex = ((typeof(e.srcElement) === "undefined") || e.srcElement === null? e.target : e.srcElement).index;
 
         // Sometimes the index is not attached to the
         // event object. Find it by size. Hack for sure.
