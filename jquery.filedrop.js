@@ -32,6 +32,7 @@
     jQuery.event.props.push("dataTransfer");
 
     var default_opts = {
+        timeoutLeave: 100,
         element: null,
         fallback_id: '',
         url: '',
@@ -391,6 +392,9 @@
                     // we use browsers native functionality 
                     var f = new FormData();
                     f.append(typeof(opts.paramname) === "function" ? opts.paramname() : opts.paramname, file);
+                    $.each(opts.data, function(k,v){
+                        f.append(k, v);
+                    });
                     xhr.send(f);
                 } else { 
                     // we need to simulate the browser native functionality
@@ -403,8 +407,6 @@
                     }
                     xhr.sendAsBinary(builder);
                 }
-                
-                
 
                 global_progress[global_progress_index] = 0;
                 globalProgress();
@@ -529,7 +531,7 @@
                 return function() {
                     opts.docLeave.call(_this, e);
                 };
-            })(this), 200);
+            })(this), opts.timeoutLeave);
         }
 
         return this;
