@@ -130,7 +130,9 @@
       builder += crlf;
       
       if (useBinaryUrl) {
-        builder += atob(filedata.split(',')[1]);
+        if (filedata !== null) {
+          builder += atob(filedata.split(',')[1]);
+        }
       }else {
         builder += filedata;
       }
