@@ -65,7 +65,7 @@
       doc_leave_timer, stop_loop = false,
       files_count = 0,
       files,
-      useBinaryUrl = !jQuery.isFunction(FileReader.prototype.readAsBinaryString);
+      useBinaryUrl = window.FileReader && !jQuery.isFunction(FileReader.prototype.readAsBinaryString);
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
