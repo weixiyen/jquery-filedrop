@@ -32,6 +32,7 @@
   var default_opts = {
       fallback_id: '',
       url: '',
+      method: 'POST',
       refresh: 1000,
       paramname: 'userfile',
       allowedfiletypes:[],
@@ -347,9 +348,9 @@
 
 		// Allow url to be a method
 		if (jQuery.isFunction(opts.url)) {
-	        xhr.open("POST", opts.url(), true);
+	        xhr.open(opts.method, opts.url(), true);
 	    } else {
-	    	xhr.open("POST", opts.url, true);
+	    	xhr.open(opts.method, opts.url, true);
 	    }
 	    
         xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
