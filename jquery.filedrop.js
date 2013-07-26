@@ -68,17 +68,26 @@
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
-        global_progress = [];
+        global_progress = [],
+        namespace = ".filedrop_" + fallback_id;
 
-    this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
-    $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
-    $('#' + opts.fallback_id).change(function(e) {
-      opts.drop(e);
-      files = e.target.files;
-      files_count = files.length;
-      upload();
-    });
+    this
+      .off('drop' + namespace).off('dragstart' + namespace).off('dragenter' + namespace).off('dragover' + namespace).off('dragleave' + namespace)
+      .on('drop' + namespace, drop).on('dragstart' + namespace, opts.dragStart).on('dragenter' + namespace, dragEnter).on('dragover' + namespace, dragOver).on('dragleave' + namespace, dragLeave);
+
+    $(document)
+      .off('drop' + namespace).off('dragenter' + namespace).off('dragover' + namespace).off('dragleave' + namespace)
+      .on('drop' + namespace, docDrop).on('dragenter' + namespace, docEnter).on('dragover' + namespace, docOver).on('dragleave' + namespace, docLeave);
+
+    $('#' + opts.fallback_id)
+      .off("change" + namespace)
+      .on("change" + namespace, function(e) {
+        opts.drop(e);
+        files = e.target.files;
+        files_count = files.length;
+        upload();
+      });
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
