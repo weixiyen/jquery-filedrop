@@ -69,7 +69,7 @@
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
         global_progress = [],
-        namespace = ".filedrop_" + fallback_id;
+        namespace = ".filedrop_" + opts.fallback_id;
 
 
     this
