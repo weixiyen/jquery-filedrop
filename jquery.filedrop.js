@@ -500,7 +500,15 @@
       }
       var ords = Array.prototype.map.call(datastr, byteValue);
       var ui8a = new Uint8Array(ords);
-      this.send(ui8a.buffer);
+
+      // Not pretty: Chrome 22 deprecated sending ArrayBuffer, moving instead
+      // to sending ArrayBufferView.  Sadly, no proper way to detect this
+      // functionality has been discovered.  Happily, Chrome 22 also introduced
+      // the base ArrayBufferView class, not present in Chrome 21.
+      if ('ArrayBufferView' in window)
+        this.send(ui8a);
+      else
+        this.send(ui8a.buffer);
     };
   } catch (e) {}
 
