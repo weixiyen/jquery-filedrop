@@ -73,6 +73,21 @@
     this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
+	if (opts.fileInput && opts.fileInput.length > 0) {
+		opts.fileInput.each(function() {
+			if (this.tagName.toLowerCase() == 'input' && this.type.toLowerCase() == 'file') {
+				$(this).on('change', function () {
+					drop({
+						dataTransfer : {
+							files: opts.fileInput.prop('files')
+						},
+						preventDefault: function() {}
+					});
+				});
+			}
+		});
+	}
+	
     $('#' + opts.fallback_id).change(function(e) {
       opts.drop(e);
       files = e.target.files;
