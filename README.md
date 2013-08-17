@@ -1,5 +1,9 @@
-jQuery filedrop plugin - html5 drag desktop files into browser
-==============================
+jQuery filedrop plugin
+======================
+
+HTML5 drag desktop files into browser
+-------------------------------------
+
 jQuery filedrop uses the HTML5 File API to allow users
 to drag multiple files from desktop to the browser, uploading
 each file to a user-specified URL.
@@ -12,10 +16,11 @@ Works on Chrome, Firefox 3.6+, IE10+, and Opera 12+.
 
 Would love contribution for Safari support.
 
-filedrop also allows users to define functions to handle the 'BrowserNotSupported' error.
+filedrop also allows users to define functions to handle the `BrowserNotSupported` error.
 
 Usage Example
 ---------------
+
 ```javascript
 $('#dropzone').filedrop({
 	fallback_id: 'upload_button',   // an identifier of a standard file input element
@@ -34,7 +39,7 @@ $('#dropzone').filedrop({
 	error: function(err, file) {
 		switch(err) {
 			case 'BrowserNotSupported':
-				alert('browser does not support html5 drag and drop')
+				alert('browser does not support HTML5 drag and drop')
 				break;
 			case 'TooManyFiles':
 				// user uploaded more than 'maxfiles'
@@ -114,12 +119,15 @@ To enable the upload of a large number of files, a queueing option was added tha
 
 This is controlled via one of two parameters:
 
-    maxfiles: 10    // Limit the total number of uploads possible - default behaviour
-    queuefiles: 2   // Control how many uploads are attempted in parallel (ignores maxfiles setting)
+```javascript
+maxfiles: 10    // Limit the total number of uploads possible - default behaviour
+queuefiles: 2   // Control how many uploads are attempted in parallel (ignores maxfiles setting)
+```
 
-Not setting a value for queuefiles will disable queueing.
+Not setting a value for `queuefiles` will disable queueing.
 
 Contributions
----------------
+-------------
+
 * [Reactor5](http://github.com/Reactor5/) (Brian Hicks)
 * [jpb0104](http://github.com/jpb0104)
