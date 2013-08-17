@@ -64,7 +64,8 @@
       errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError"],
       doc_leave_timer, stop_loop = false,
       files_count = 0,
-      files;
+      files,
+      useBinaryUrl = window.FileReader && !jQuery.isFunction(FileReader.prototype.readAsBinaryString);
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
@@ -131,8 +132,14 @@
       builder += 'Content-Type: ' + mime;
       builder += crlf;
       builder += crlf;
-
-      builder += filedata;
+      
+      if (useBinaryUrl) {
+        if (filedata !== null) {
+          builder += atob(filedata.split(',')[1]);
+        }
+      }else {
+        builder += filedata;
+      }
       builder += crlf;
 
       builder += dashdash;
@@ -286,8 +293,11 @@
             reader.onloadend = !opts.beforeSend ? send : function (e) {
               opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
             };
-            
-            reader.readAsBinaryString(files[fileIndex]);
+            if (!useBinaryUrl) {
+                reader.readAsBinaryString(files[fileIndex]);
+            } else {
+                reader.readAsDataURL(files[fileIndex]);
+            }
 
           } else {
             filesRejected++;
@@ -299,6 +309,7 @@
               processingQueue.splice(key, 1);
             }
           });
+          if (window.console){ console.error(err); }
           opts.error(errors[0]);
           return false;
         }
@@ -311,7 +322,7 @@
 
       var send = function(e) {
 
-        var fileIndex = ((typeof(e.srcElement) === "undefined") ? e.target : e.srcElement).index;
+        var fileIndex = ((typeof(e.srcElement) === "undefined") || e.srcElement === null? e.target : e.srcElement).index;
 
         // Sometimes the index is not attached to the
         // event object. Find it by size. Hack for sure.
