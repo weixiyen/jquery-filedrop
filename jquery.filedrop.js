@@ -286,8 +286,8 @@
             reader.onloadend = !opts.beforeSend ? send : function (e) {
               opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
             };
-            
-            reader.readAsBinaryString(files[fileIndex]);
+
+            reader.readAsDataURL(files[fileIndex]);
 
           } else {
             filesRejected++;
@@ -311,7 +311,7 @@
 
       var send = function(e) {
 
-        var fileIndex = ((typeof(e.srcElement) === "undefined") ? e.target : e.srcElement).index;
+        var fileIndex = (e.srcElement || e.target).index;
 
         // Sometimes the index is not attached to the
         // event object. Find it by size. Hack for sure.
@@ -334,10 +334,11 @@
           xhr.withCredentials = opts.withCredentials;
         }
 
+        var data = atob(e.target.result.split(',')[1]);
         if (typeof newName === "string") {
-          builder = getBuilder(newName, e.target.result, mime, boundary);
+          builder = getBuilder(newName, data, mime, boundary);
         } else {
-          builder = getBuilder(file.name, e.target.result, mime, boundary);
+          builder = getBuilder(file.name, data, mime, boundary);
         }
 
         upload.index = index;
