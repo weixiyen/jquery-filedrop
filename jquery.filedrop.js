@@ -358,6 +358,7 @@
         }
 
         xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
         // Add headers
         $.each(opts.headers, function(k, v) {
