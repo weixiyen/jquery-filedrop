@@ -8,7 +8,7 @@ filedrop uses HTML5 FileReader() to read file data.
 
 Browser Support
 ---------------
-Works on Chrome and Firefox 3.6+.
+Works on Chrome, Firefox 3.6+, IE10+, and Opera 12+.
 
 Would love contribution for Safari support.
 
