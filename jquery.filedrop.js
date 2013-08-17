@@ -34,6 +34,7 @@
       url: '',
       refresh: 1000,
       paramname: 'userfile',
+      requestType: 'POST',    // just in case you want to use another HTTP verb
       allowedfiletypes:[],
       maxfiles: 25,           // Ignored if queuefiles is set > 0
       maxfilesize: 1,         // MB file size limit
@@ -352,9 +353,9 @@
 
         // Allow url to be a method
         if (jQuery.isFunction(opts.url)) {
-            xhr.open("POST", opts.url(file), true);
+            xhr.open(opts.requestType, opts.url(), true);
         } else {
-            xhr.open("POST", opts.url, true);
+            xhr.open(opts.requestType, opts.url, true);
         }
 
         xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
