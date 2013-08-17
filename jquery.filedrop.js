@@ -64,8 +64,7 @@
       errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError"],
       doc_leave_timer, stop_loop = false,
       files_count = 0,
-      files,
-      useBinaryUrl = window.FileReader && !jQuery.isFunction(FileReader.prototype.readAsBinaryString);
+      files;
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
@@ -128,14 +127,8 @@
       builder += 'Content-Type: ' + mime;
       builder += crlf;
       builder += crlf;
-      
-      if (useBinaryUrl) {
-        if (filedata !== null) {
-          builder += atob(filedata.split(',')[1]);
-        }
-      }else {
-        builder += filedata;
-      }
+
+      builder += filedata;
       builder += crlf;
 
       builder += dashdash;
@@ -289,11 +282,8 @@
             reader.onloadend = !opts.beforeSend ? send : function (e) {
               opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
             };
-            if (!useBinaryUrl) {
-                reader.readAsBinaryString(files[fileIndex]);
-            } else {
-                reader.readAsDataURL(files[fileIndex]);
-            }
+
+            reader.readAsDataURL(files[fileIndex]);
 
           } else {
             filesRejected++;
@@ -305,7 +295,6 @@
               processingQueue.splice(key, 1);
             }
           });
-          if (window.console){ console.error(err); }
           opts.error(errors[0]);
           return false;
         }
@@ -318,7 +307,7 @@
 
       var send = function(e) {
 
-        var fileIndex = ((typeof(e.srcElement) === "undefined") || e.srcElement === null? e.target : e.srcElement).index;
+        var fileIndex = (e.srcElement || e.target).index;
 
         // Sometimes the index is not attached to the
         // event object. Find it by size. Hack for sure.
@@ -341,10 +330,11 @@
           xhr.withCredentials = opts.withCredentials;
         }
 
+        var data = atob(e.target.result.split(',')[1]);
         if (typeof newName === "string") {
-          builder = getBuilder(newName, e.target.result, mime, boundary);
+          builder = getBuilder(newName, data, mime, boundary);
         } else {
-          builder = getBuilder(file.name, e.target.result, mime, boundary);
+          builder = getBuilder(file.name, data, mime, boundary);
         }
 
         upload.index = index;
