@@ -35,6 +35,7 @@
       refresh: 1000,
       paramname: 'userfile',
       requestType: 'POST',    // just in case you want to use another HTTP verb
+      allowedfileextensions:[],
       allowedfiletypes:[],
       maxfiles: 25,           // Ignored if queuefiles is set > 0
       maxfilesize: 1,         // MB file size limit
