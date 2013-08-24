@@ -62,14 +62,14 @@
       globalProgressUpdated: empty,
       speedUpdated: empty
       },
-      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError", "FileExtensionNotAllowed"],
-      doc_leave_timer, stop_loop = false,
-      files_count = 0,
-      files;
+      errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError", "FileExtensionNotAllowed"];
 
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
-        global_progress = [];
+        global_progress = [],
+        doc_leave_timer, stop_loop = false,
+        files_count = 0,
+        files;
 
     this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
