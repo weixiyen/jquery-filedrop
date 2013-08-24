@@ -25,7 +25,7 @@ Usage Example
 $('#dropzone').filedrop({
 	fallback_id: 'upload_button',   // an identifier of a standard file input element
 	url: 'upload.php',				// upload handler, handles each file separately, can also be a function taking the file and returning a url
-	paramname: 'userfile',			// POST parameter name used on serverside to reference file
+	paramname: 'userfile',			// POST parameter name used on serverside to reference file, can also be a function taking the filename and returning the paramname
 	withCredentials: true,			// make a cross-origin request with cookies
 	data: {
 		param1: 'value1', 			// send POST variables
