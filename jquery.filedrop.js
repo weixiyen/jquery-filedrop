@@ -222,7 +222,9 @@
         for(var fileIndex = files.length;fileIndex--;) {
           var allowedextension = false;
           for (i=0;i<opts.allowedfileextensions.length;i++){
-            if (files[fileIndex].name.substr(files[fileIndex].name.length-opts.allowedfileextensions[i].length) == opts.allowedfileextensions[i]) {
+            if (files[fileIndex].name.substr(files[fileIndex].name.length-opts.allowedfileextensions[i].length).toLowerCase()
+                    == opts.allowedfileextensions[i].toLowerCase()
+            ) {
               allowedextension = true;
             }
           }
