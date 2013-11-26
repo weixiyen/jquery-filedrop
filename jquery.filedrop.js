@@ -52,6 +52,7 @@
       docOver: empty,
       docLeave: empty,
       beforeEach: empty,
+      beforeSend: null,
       afterAll: empty,
       rename: empty,
       error: function(err, file, i, status) {
@@ -107,79 +108,80 @@
       return false;
     }
 
-    function getBuilder(filename, filedata, mime, boundary) {
-      var dashdash = '--',
-          crlf = '\r\n',
-          builder = '',
-          paramname = opts.paramname;
+//    function getBuilder(filename, filedata, mime, boundary) {
+//      var dashdash = '--',
+//          crlf = '\r\n',
+//          builder = '',
+//          paramname = opts.paramname;
+//
+//      if (opts.data) {
+//        var params = $.param(opts.data).replace(/\+/g, '%20').split(/&/);
+//
+//        $.each(params, function() {
+//          var pair = this.split("=", 2),
+//              name = decodeURIComponent(pair[0]),
+//              val  = decodeURIComponent(pair[1]);
+//
+//          if (pair.length !== 2) {
+//              return;
+//          }
+//
+//          builder += dashdash;
+//          builder += boundary;
+//          builder += crlf;
+//          builder += 'Content-Disposition: form-data; name="' + name + '"';
+//          builder += crlf;
+//          builder += crlf;
+//          builder += val;
+//          builder += crlf;
+//        });
+//      }
+//
+//      if (jQuery.isFunction(paramname)){
+//        paramname = paramname(filename);
+//      }
+//
+//      builder += dashdash;
+//      builder += boundary;
+//      builder += crlf;
+//      builder += 'Content-Disposition: form-data; name="' + (paramname||"") + '"';
+//      builder += '; filename="' + filename + '"';
+//      builder += crlf;
+//
+//      builder += 'Content-Type: ' + mime;
+//      builder += crlf;
+//      builder += crlf;
+//
+//      builder += filedata;
+//      builder += crlf;
+//
+//      builder += dashdash;
+//      builder += boundary;
+//      builder += dashdash;
+//      builder += crlf;
+//      return builder;
+//    }
 
-      if (opts.data) {
-        var params = $.param(opts.data).replace(/\+/g, '%20').split(/&/);
-
-        $.each(params, function() {
-          var pair = this.split("=", 2),
-              name = decodeURIComponent(pair[0]),
-              val  = decodeURIComponent(pair[1]);
-
-          if (pair.length !== 2) {
-              return;
-          }
-
-          builder += dashdash;
-          builder += boundary;
-          builder += crlf;
-          builder += 'Content-Disposition: form-data; name="' + name + '"';
-          builder += crlf;
-          builder += crlf;
-          builder += val;
-          builder += crlf;
-        });
-      }
-
-      if (jQuery.isFunction(paramname)){
-        paramname = paramname(filename);
-      }
-
-      builder += dashdash;
-      builder += boundary;
-      builder += crlf;
-      builder += 'Content-Disposition: form-data; name="' + (paramname||"") + '"';
-      builder += '; filename="' + filename + '"';
-      builder += crlf;
-
-      builder += 'Content-Type: ' + mime;
-      builder += crlf;
-      builder += crlf;
-
-      builder += filedata;
-      builder += crlf;
-
-      builder += dashdash;
-      builder += boundary;
-      builder += dashdash;
-      builder += crlf;
-      return builder;
-    }
-
-    function progress(e) {
+    function uploadProgress(e) {
       if (e.lengthComputable) {
-        var percentage = Math.round((e.loaded * 100) / e.total);
-        if (this.currentProgress !== percentage) {
+        var data = this.customData,
+            percentage = Math.round((e.loaded * 100) / e.total);
+        if (data.currentProgress !== percentage) {
 
-          this.currentProgress = percentage;
-          opts.progressUpdated(this.index, this.file, this.currentProgress);
+          data.currentProgress = percentage;
+          opts.progressUpdated(data.index, data.file, data.currentProgress);
 
-          global_progress[this.global_progress_index] = this.currentProgress;
+          global_progress[data.global_progress_index] = data.currentProgress;
           globalProgress();
 
           var elapsed = new Date().getTime();
-          var diffTime = elapsed - this.currentStart;
+          var diffTime = elapsed - data.currentStart;
           if (diffTime >= opts.refresh) {
-            var diffData = e.loaded - this.startData;
+            var diffData = e.loaded - data.startData;
             var speed = diffData / diffTime; // KB per second
-            opts.speedUpdated(this.index, this.file, speed);
-            this.startData = e.loaded;
-            this.currentStart = elapsed;
+            opts.speedUpdated(data.index, data.file, speed);
+            data.startData = e.loaded;
+            data.currentStart = elapsed;
           }
         }
       }
@@ -285,7 +287,7 @@
               return;
             }
             var reader = new FileReader(),
-                max_file_size = 1048576 * opts.maxfilesize;
+                max_file_size = 1048576 * opts.maxfilesize; //1048576 B == 1 MB
 
             reader.index = fileIndex;
             if (files[fileIndex].size > max_file_size) {
@@ -354,36 +356,37 @@
         }
 
         var xhr = new XMLHttpRequest(),
-            upload = xhr.upload,
+//            upload = xhr.upload,
             file = files[e.target.index],
             index = e.target.index,
             start_time = new Date().getTime(),
-            boundary = '------multipartformboundary' + (new Date()).getTime(),
-            global_progress_index = global_progress.length,
-            builder,
-            newName = rename(file.name),
-            mime = file.type;
+//            boundary = '------multipartformboundary' + (new Date()).getTime(),
+            global_progress_index = global_progress.length;
+//            builder,
+//            newName = rename(file.name),
+//            mime = file.type;
 
         if (opts.withCredentials) {
           xhr.withCredentials = opts.withCredentials;
         }
 
-        var data = atob(e.target.result.split(',')[1]);
-        if (typeof newName === "string") {
-          builder = getBuilder(newName, data, mime, boundary);
-        } else {
-          builder = getBuilder(file.name, data, mime, boundary);
-        }
+//        var data = atob(e.target.result.split(',')[1]);
+//        if (typeof newName === "string") {
+//          builder = getBuilder(newName, data, mime, boundary);
+//        } else {
+//          builder = getBuilder(file.name, data, mime, boundary);
+//        }
 
-        upload.index = index;
-        upload.file = file;
-        upload.downloadStartTime = start_time;
-        upload.currentStart = start_time;
-        upload.currentProgress = 0;
-        upload.global_progress_index = global_progress_index;
-        upload.startData = 0;
-        upload.addEventListener("progress", progress, false);
-
+        xhr.upload.customData = {
+            index : index,
+            file : file,
+            downloadStartTime : start_time,
+            currentStart : start_time,
+            currentProgress : 0,
+            global_progress_index : global_progress_index,
+            startData : 0
+        };
+        xhr.upload.onprogress = uploadProgress;
         // Allow url to be a method
         if (jQuery.isFunction(opts.url)) {
             xhr.open(opts.requestType, opts.url(), true);
@@ -391,15 +394,25 @@
             xhr.open(opts.requestType, opts.url, true);
         }
 
-        xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
-        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+//        xhr.setRequestHeader('content-type', 'multipart/form-data; boundary=' + boundary);
+//        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
         // Add headers
         $.each(opts.headers, function(k, v) {
           xhr.setRequestHeader(k, v);
         });
 
-        xhr.sendAsBinary(builder);
+        var formData = new FormData();
+        if (opts.data) {
+          $.each(opts.data, function (k, v) {
+            formData.append(k,v);
+          });
+        }
+
+        formData.append( opts.paramname, file);
+
+        xhr.send(formData);
+//        xhr.sendAsBinary(builder);
 
         global_progress[global_progress_index] = 0;
         globalProgress();
