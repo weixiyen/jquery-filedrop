@@ -71,9 +71,14 @@
         global_progress = [],
         doc_leave_timer, stop_loop = false,
         files_count = 0,
-        files;
+        files,
+        $fallBack = opts.fallback_id;
 
-    $('#' + opts.fallback_id).css({
+    if(!($fallBack instanceof jQuery)){
+        $fallBack = $($fallBack);
+    }
+
+    $fallBack.css({
       display: 'none',
       width: 0,
       height: 0
@@ -83,10 +88,10 @@
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
     this.on('click', function(e){
-      $('#' + opts.fallback_id).trigger(e);
+      $fallBack.trigger(e);
     });
 
-    $('#' + opts.fallback_id).change(function(e) {
+    $fallBack.change(function(e) {
       opts.drop(e);
       files = e.target.files;
       files_count = files.length;
