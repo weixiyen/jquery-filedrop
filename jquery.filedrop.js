@@ -30,6 +30,7 @@
   jQuery.event.props.push("dataTransfer");
 
   var default_opts = {
+      force_fallback_id: '',
       fallback_id: '',
       url: '',
       refresh: 1000,
@@ -83,6 +84,13 @@
 
     this.on('click', function(e){
       $('#' + opts.fallback_id).trigger(e);
+    });
+
+    $('#' + opts.force_fallback_id).change(function(e) {
+      opts.drop(e);
+      files = e.target.files;
+      files_count = files.length;
+      upload();
     });
 
     $('#' + opts.fallback_id).change(function(e) {
