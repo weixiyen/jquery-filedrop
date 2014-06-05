@@ -30,7 +30,9 @@
   jQuery.event.props.push("dataTransfer");
 
   var default_opts = {
-      fallback_id: '',
+      fallback_input: null,
+      binded_input: null,
+      fallbackClick: true,
       url: '',
       refresh: 1000,
       paramname: 'userfile',
@@ -70,27 +72,46 @@
         global_progress = [],
         doc_leave_timer, stop_loop = false,
         files_count = 0,
-        files;
+        files,
+        binded_input,
+        fallback_input
 
-    $('#' + opts.fallback_id).css({
-      display: 'none',
-      width: 0,
-      height: 0
-    });
+    binded_input = typeof opts.binded_input === 'string' ? $('#' + opts.binded_input) : opts.binded_input;
+    fallback_input = typeof opts.fallback_input === 'string' ? $('#' + opts.fallback_input) : opts.fallback_input;
 
     this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
 
-    this.on('click', function(e){
-      $('#' + opts.fallback_id).trigger(e);
-    });
-
-    $('#' + opts.fallback_id).change(function(e) {
+    var trigger = function(e) {
       opts.drop(e);
       files = e.target.files;
       files_count = files.length;
       upload();
-    });
+    }
+
+    if (fallback_input) {
+      fallback_input.css({
+        display: 'none',
+        width: 0,
+        height: 0
+      });
+
+      if (opts.fallbackClick) {
+        this.on('click', function(e){
+          fallback_input.trigger(e);
+        });
+
+        $(fallback_input).change(function(e) {
+          trigger(e);
+        });
+      }
+    }
+
+    if (binded_input) {
+      $(binded_input).change(function(e) {
+        trigger(e);
+      });
+    }
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
