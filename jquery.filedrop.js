@@ -68,9 +68,7 @@
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options),
         global_progress = [],
-        doc_leave_timer, stop_loop = false,
-        files_count = 0,
-        files;
+        doc_leave_timer, stop_loop = false;
 
     $('#' + opts.fallback_id).css({
       display: 'none',
@@ -86,23 +84,41 @@
     });
 
     $('#' + opts.fallback_id).change(function(e) {
+
+      if (e.target.files.length == 0) {
+        return;
+      }
+      var files = [];
+
       opts.drop(e);
-      files = e.target.files;
-      files_count = files.length;
-      upload();
+
+      for(var i=0;i<e.target.files.length;i++) {
+        files.push(e.target.files[i]);
+      }
+
+      upload(files);
+
     });
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
       if(!e.dataTransfer)
         return;
-      files = e.dataTransfer.files;
-      if (files === null || files === undefined || files.length === 0) {
+
+      var newFiles = e.dataTransfer.files;
+      if (newFiles === null || newFiles === undefined || newFiles.length === 0) {
         opts.error(errors[0]);
         return false;
       }
-      files_count = files.length;
-      upload();
+
+      var files = [];
+
+
+      for(var i=0;i<newFiles.length;i++) {
+        files.push(newFiles[i]);
+      }
+
+      upload(files);
       e.preventDefault();
       return false;
     }
@@ -201,7 +217,8 @@
     }
 
     // Respond to an upload
-    function upload() {
+    function upload(files) {
+      var files_count = files.length;
       stop_loop = false;
 
       if (!files) {
@@ -261,9 +278,10 @@
       };
 
       // Process an upload, recursive
-      var process = function() {
+      var process = function(files) {
 
         var fileIndex;
+        var files_count = files.length;
 
         if (stop_loop) {
           return false;
@@ -319,8 +337,8 @@
                 };
             };
 
-            reader.onloadend = !opts.beforeSend ? send : function (e) {
-              opts.beforeSend(files[fileIndex], fileIndex, function () { send(e); });
+            reader.onloadend = !opts.beforeSend ? function(e) { send(e,files);} : function (e) {
+              opts.beforeSend(files[fileIndex], fileIndex, function () { send(e,files); });
             };
 
             reader.readAsDataURL(files[fileIndex]);
@@ -341,18 +359,19 @@
 
         // If we still have work to do,
         if (workQueue.length > 0) {
-          process();
+          process(files);
         }
       };
 
-      var send = function(e) {
+      var send = function(e,files) {
 
+        var files_count = files.length;
         var fileIndex = (e.srcElement || e.target).index;
 
         // Sometimes the index is not attached to the
         // event object. Find it by size. Hack for sure.
         if (e.target.index === undefined) {
-          e.target.index = getIndexBySize(e.total);
+          e.target.index = getIndexBySize(e.total,files);
         }
 
         var xhr = new XMLHttpRequest(),
@@ -466,11 +485,11 @@
       };
 
       // Initiate the processing loop
-      process();
+      process(files);
     }
 
-    function getIndexBySize(size) {
-      for (var i = 0; i < files_count; i++) {
+    function getIndexBySize(size,files) {
+      for (var i = 0; i < files.length; i++) {
         if (files[i].size === size) {
           return i;
         }
