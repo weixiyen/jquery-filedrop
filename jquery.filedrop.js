@@ -62,7 +62,8 @@
       speedUpdated: empty
       },
       errors = ["BrowserNotSupported", "TooManyFiles", "FileTooLarge", "FileTypeNotAllowed", "NotFound", "NotReadable", "AbortError", "ReadError"],
-      doc_leave_timer, stop_loop = false,
+      doc_leave_timer = {},
+      stop_loop = false,
       files_count = 0,
       files;
 
@@ -448,20 +449,20 @@
     }
 
     function dragEnter(e) {
-      clearTimeout(doc_leave_timer);
+      clearTimeout(docLeaveTimer());
       e.preventDefault();
       opts.dragEnter.call(this, e);
     }
 
     function dragOver(e) {
-      clearTimeout(doc_leave_timer);
+      clearTimeout(docLeaveTimer());
       e.preventDefault();
       opts.docOver.call(this, e);
       opts.dragOver.call(this, e);
     }
 
     function dragLeave(e) {
-      clearTimeout(doc_leave_timer);
+      clearTimeout(docLeaveTimer());
       opts.dragLeave.call(this, e);
       e.stopPropagation();
     }
@@ -473,25 +474,29 @@
     }
 
     function docEnter(e) {
-      clearTimeout(doc_leave_timer);
+      clearTimeout(docLeaveTimer());
       e.preventDefault();
       opts.docEnter.call(this, e);
       return false;
     }
 
     function docOver(e) {
-      clearTimeout(doc_leave_timer);
+      clearTimeout(docLeaveTimer());
       e.preventDefault();
       opts.docOver.call(this, e);
       return false;
     }
 
     function docLeave(e) {
-      doc_leave_timer = setTimeout((function(_this) {
+      doc_leave_timer[namespace] = setTimeout((function(_this) {
         return function() {
           opts.docLeave.call(_this, e);
         };
       })(this), 200);
+    }
+
+    function docLeaveTimer() {
+      return doc_leave_timer[namespace];
     }
 
     return this;
