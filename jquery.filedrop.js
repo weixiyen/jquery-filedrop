@@ -402,7 +402,7 @@
 
         // Allow url to be a method
         if (jQuery.isFunction(opts.url)) {
-            xhr.open(opts.requestType, opts.url(), true);
+            xhr.open(opts.requestType, opts.url(upload), true);
         } else {
             xhr.open(opts.requestType, opts.url, true);
         }
