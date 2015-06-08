@@ -87,9 +87,16 @@
 
     if ( opts.fallback_dropzoneClick === true )
     {
-      this.on('click', function(e){
-        $('#' + opts.fallback_id).trigger(e);
-      });
+      if ( this.find('#' + opts.fallback_id).length > 0 )
+      {
+        throw "Fallback element ["+opts.fallback_id+"] cannot be inside dropzone, unless option fallback_dropzoneClick is false";
+      }
+      else
+      {
+        this.on('click', function(e){
+          $('#' + opts.fallback_id).trigger(e);
+        });
+      }
     }
 
     $('#' + opts.fallback_id).change(function(e) {
