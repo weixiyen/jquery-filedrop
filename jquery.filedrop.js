@@ -370,7 +370,8 @@
           xhr.withCredentials = opts.withCredentials;
         }
 
-        var data = atob(e.target.result.split(',')[1]);
+        var encodedString = e.target.result.split(',')[1];
+        var data = encodedString === undefined ? '' : atob(encodedString);
         if (typeof newName === "string") {
           builder = getBuilder(newName, data, mime, boundary);
         } else {
