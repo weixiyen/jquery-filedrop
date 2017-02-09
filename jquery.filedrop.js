@@ -27,8 +27,6 @@
  */
 ;(function($) {
 
-  jQuery.event.props.push("dataTransfer");
-
   var default_opts = {
       fallback_id: '',
       url: '',
@@ -94,9 +92,9 @@
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
-      if(!e.dataTransfer)
+      if(!e.originalEvent.dataTransfer)
         return;
-      files = e.dataTransfer.files;
+      files = e.originalEvent.dataTransfer.files;
       if (files === null || files === undefined || files.length === 0) {
         opts.error(errors[0]);
         return false;
