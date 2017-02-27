@@ -124,7 +124,8 @@
           crlf = '\r\n',
           builder = '',
           paramname = opts.paramname;
-
+          filename=encodeURIComponent(filename);
+          
       if (opts.data) {
         var params = $.param(opts.data).replace(/\+/g, '%20').split(/&/);
 
