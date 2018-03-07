@@ -71,38 +71,41 @@
         files_count = 0,
         files;
 
-    if ( opts.fallback_dropzoneClick === true )
+    if ( opts.fallback_id )
     {
-      $('#' + opts.fallback_id).css({
-        display: 'none',
-        width: 0,
-        height: 0
+      if ( opts.fallback_dropzoneClick === true )
+      {
+        $('#' + opts.fallback_id).css({
+          display: 'none',
+          width: 0,
+          height: 0
+        });
+      }
+
+      if ( opts.fallback_dropzoneClick === true )
+      {
+        if ( this.find('#' + opts.fallback_id).length > 0 )
+        {
+          throw "Fallback element ["+opts.fallback_id+"] cannot be inside dropzone, unless option fallback_dropzoneClick is false";
+        }
+        else
+        {
+          this.on('click', function(e){
+            $('#' + opts.fallback_id).trigger(e);
+          });
+        }
+      }
+
+      $('#' + opts.fallback_id).change(function(e) {
+        opts.drop(e);
+        files = e.target.files;
+        files_count = files.length;
+        upload();
       });
     }
 
     this.on('drop', drop).on('dragstart', opts.dragStart).on('dragenter', dragEnter).on('dragover', dragOver).on('dragleave', dragLeave);
     $(document).on('drop', docDrop).on('dragenter', docEnter).on('dragover', docOver).on('dragleave', docLeave);
-
-    if ( opts.fallback_dropzoneClick === true )
-    {
-      if ( this.find('#' + opts.fallback_id).length > 0 )
-      {
-        throw "Fallback element ["+opts.fallback_id+"] cannot be inside dropzone, unless option fallback_dropzoneClick is false";
-      }
-      else
-      {
-        this.on('click', function(e){
-          $('#' + opts.fallback_id).trigger(e);
-        });
-      }
-    }
-
-    $('#' + opts.fallback_id).change(function(e) {
-      opts.drop(e);
-      files = e.target.files;
-      files_count = files.length;
-      upload();
-    });
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
