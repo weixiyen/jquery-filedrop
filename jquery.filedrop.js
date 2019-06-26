@@ -100,12 +100,14 @@
       }
     }
 
-    $('#' + opts.fallback_id).change(function(e) {
-      opts.drop(e);
-      files = e.target.files;
-      files_count = files.length;
-      upload();
-    });
+    if(opts.fallback_id) {
+      $('#' + opts.fallback_id).change(function(e) {
+        opts.drop(e);
+        files = e.target.files;
+        files_count = files.length;
+        upload();
+      });   
+    }
 
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
