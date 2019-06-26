@@ -71,7 +71,7 @@
         files_count = 0,
         files;
 
-    if ( opts.fallback_dropzoneClick === true )
+    if ( opts.fallback_dropzoneClick === true && this.find('#' + opts.fallback_id).length > 0)
     {
       $('#' + opts.fallback_id).css({
         display: 'none',
@@ -424,7 +424,7 @@
                   this.send(ui8a.buffer);
               }
           }
-          
+
         xhr.sendAsBinary(builder);
 
         global_progress[global_progress_index] = 0;
