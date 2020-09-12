@@ -28,8 +28,8 @@
 ;(function($) {
 
   var default_opts = {
-      fallback_id: '',
-      fallback_dropzoneClick : true,
+      fallback_id: '',                 // if this opt is set then change fallback_dropzoneClick to true 
+      fallback_dropzoneClick : false,  // change to false because if fallback_id is '' by default
       url: '',
       refresh: 1000,
       paramname: 'userfile',
@@ -95,15 +95,16 @@
           $('#' + opts.fallback_id).trigger(e);
         });
       }
-    }
-
-    $('#' + opts.fallback_id).change(function(e) {
-      opts.drop(e);
-      files = e.target.files;
-      files_count = files.length;
-      upload();
-    });
-
+    
+      $('#' + opts.fallback_id).change(function(e) { // This generate the error "Syntax error, unrecognized expression: #" 
+        opts.drop(e);                                // in newer versions of jQuery. Solved moving line 98 to 106 :)
+        files = e.target.files;
+        files_count = files.length;
+        upload();
+      });
+    
+    }  // Moved here from line 98 
+    
     function drop(e) {
       if( opts.drop.call(this, e) === false ) return false;
       if(!e.originalEvent.dataTransfer)
